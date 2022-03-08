@@ -6,7 +6,7 @@ def convert(n):
     if n == "v":
         return str("SqlString")
     if n == "dt":
-        return str("SqlDatetime")
+        return str("SqlDateTime")
 
 code = ""
 
