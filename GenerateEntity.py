@@ -6,7 +6,7 @@ def convert(n):
     if n == "v":
         return str("SqlString")
     if n == "dt":
-        return str("SqlDateTime")
+        return str("SqlDatetime")
 
 code = ""
 
@@ -14,7 +14,7 @@ name = input("Enter Name of column => ")
 
 while(not (name == "exit" or name == "0")):
     datatype = input("Enter datatype (i = int, v = string, dt = datetime) => ")
-    
+    code += "#region " + name + "\n"
     code += "protected " + str(convert(datatype)) + " _" + name + ";\n\n"
     code += "public " + str(convert(datatype))  + " " + name + "\n" 
     code += "{\n"
@@ -26,7 +26,8 @@ while(not (name == "exit" or name == "0")):
     code += "\t{\n"
     code += "\t\t_" + name + " = value;\n"
     code += "\t}\n"
-    code += "}\n\n"
+    code += "}\n"
+    code += "#endregion\n\n"
 
     name = input("Enter Name of column => ")
 
