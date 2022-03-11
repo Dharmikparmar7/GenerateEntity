@@ -1,5 +1,4 @@
 import pyodbc
-import pyperclip
 import os
 
 os.mkdir("Generated")
