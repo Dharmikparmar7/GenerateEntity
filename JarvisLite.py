@@ -38,16 +38,15 @@ curs = conn.cursor()
 
 allTables = []
 
+def convert(columnType):
+    if columnType == "int":
+        return str("SqlInt32")
+    if columnType == "varchar":
+        return str("SqlString")
+    if columnType == "datetime":
+        return str("SqlDateTime")
 
 def generateEntity(columnName, columnType):
-
-    def convert(columnType):
-        if columnType == "int":
-            return str("SqlInt32")
-        if columnType == "varchar":
-            return str("SqlString")
-        if columnType == "datetime":
-            return str("SqlDateTime")
 
     code = "\t#region "+columnName+"\n\n"
 
@@ -121,11 +120,14 @@ def getAllDatabaseTables(curs):
         if curs.primaryKeys(row.table_name, row.table_cat, row.table_schem).fetchone():
             allTables.append(row.table_name)
             print(row.table_name)
+            codeNull = ''
+            for i in curs.columns(table=row.table_name): 
+                codeNull += '\t\t_' + i.column_name + ' = ' + convert(i.type_name.split(' ')[0]) + '.Null;\n'
             codeENT = 'using System;\nusing System.Collections.Generic;\nusing System.Data.SqlTypes;\nusing System.Linq;\nusing System.Web;\n\n/// <summary>\n/// Summary description for ' + \
                 row.table_name+'ENT'+'\n/// </summary>\npublic class ' + \
                 row.table_name+'ENT' + \
                 '\n{\n\t#region Constructor\n\n\tpublic ' + \
-                row.table_name+'ENT()\n\t{\n\n\t}\n\n\t#endregion\n\n'
+                row.table_name+'ENT()\n\t{\n'+codeNull+'\t}\n\n\t#endregion\n\n'
             for i in curs.columns(table=row.table_name):
                 codeENT += generateEntity(i.column_name,
                                           i.type_name.split(' ')[0])
